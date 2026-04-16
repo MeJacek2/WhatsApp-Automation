@@ -290,12 +290,15 @@ export default function WhatsAppFlowDemo({
 
   const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
+  const [hasPlayed, setHasPlayed] = useState(false);
   const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
 
   useEffect(() => {
     if (!hasTriggered) return;
+    if (hasPlayed) return;
     if (!safeFlowSteps.length) return;
+    setHasPlayed(true);
 
     let isCancelled = false;
     const timers: number[] = [];
@@ -380,7 +383,7 @@ export default function WhatsAppFlowDemo({
       isCancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
     };
-  }, [hasTriggered, safeFlowSteps]);
+  }, [hasTriggered, hasPlayed, safeFlowSteps]);
 
   return (
     <section
@@ -416,8 +419,8 @@ export default function WhatsAppFlowDemo({
           <div className="pointer-events-none absolute -left-1 top-28 hidden h-14 w-1 rounded-r-full bg-slate-300/70 lg:block" />
           <div className="pointer-events-none absolute -right-1 top-36 hidden h-24 w-1 rounded-l-full bg-slate-300/70 lg:block" />
 
-          <div className="mx-auto w-full max-w-[430px]">
-            <div className="relative aspect-[390/844] rounded-[3.25rem] border border-slate-300/90 bg-gradient-to-b from-slate-100 to-slate-200 p-2.5 shadow-[0_36px_80px_-35px_rgba(15,23,42,0.55)]">
+          <div className="mx-auto w-full max-w-[360px] sm:max-w-[375px]">
+            <div className="relative aspect-[390/790] rounded-[3rem] border border-slate-300/90 bg-gradient-to-b from-slate-100 to-slate-200 p-2.5 shadow-[0_30px_70px_-35px_rgba(15,23,42,0.55)]">
               <div className="relative h-full overflow-hidden rounded-[2.85rem] border border-slate-300/70 bg-[#e8efe9]">
                 <div className="absolute inset-x-0 top-0 z-20">
                   <div className="px-6 pt-2.5">
