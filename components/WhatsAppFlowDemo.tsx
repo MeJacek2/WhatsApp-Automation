@@ -373,6 +373,7 @@ export default function WhatsAppFlowDemo({
   const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
   const hasPlayedRef = useRef(false);
+  const messagesViewportRef = useRef<HTMLDivElement | null>(null);
   const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
 
@@ -469,6 +470,15 @@ export default function WhatsAppFlowDemo({
     };
   }, [hasTriggered, safeFlowSteps]);
 
+  useEffect(() => {
+    const node = messagesViewportRef.current;
+    if (!node) return;
+    node.scrollTo({
+      top: node.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [renderedItems, typingSender]);
+
   return (
     <section
       ref={ref}
@@ -504,7 +514,7 @@ export default function WhatsAppFlowDemo({
           <div className="pointer-events-none absolute -right-1 top-36 hidden h-24 w-1 rounded-l-full bg-slate-300/70 lg:block" />
 
           <div className="mx-auto w-full max-w-[350px] sm:max-w-[360px]">
-            <div className="relative aspect-[390/770] rounded-[3rem] border-2 border-black bg-gradient-to-b from-slate-100 to-slate-200 p-2 shadow-[0_26px_60px_-35px_rgba(15,23,42,0.55)]">
+            <div className="relative aspect-[390/795] rounded-[3rem] border-2 border-black bg-gradient-to-b from-slate-100 to-slate-200 p-2 shadow-[0_26px_60px_-35px_rgba(15,23,42,0.55)]">
               <div className="relative h-full overflow-hidden rounded-[2.7rem] border-2 border-black/95 bg-[#e8efe9]">
                 <div className="absolute inset-x-0 top-0 z-20">
                   <div className="px-6 pt-2.5">
@@ -542,43 +552,48 @@ export default function WhatsAppFlowDemo({
                     </span>
                   </div>
 
-                  <div className="relative flex-1 overflow-hidden px-2.5 py-3">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.65)_1px,transparent_0)] [background-size:16px_16px] opacity-30" />
-                    <div className="relative flex h-full flex-col gap-2.5">
-                      {renderedItems.map((item) =>
-                        item.kind === 'text' ? (
-                          <ChatBubble key={item.id} message={item} />
-                        ) : (
-                          <QuickReplyOptions key={item.id} item={item} />
-                        )
-                      )}
+                  <div className="relative flex flex-1 flex-col overflow-hidden">
+                    <div className="relative flex-1 overflow-hidden px-2.5 pb-2 pt-3">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.65)_1px,transparent_0)] [background-size:16px_16px] opacity-30" />
+                      <div
+                        ref={messagesViewportRef}
+                        className="relative flex h-full flex-col gap-2.5 overflow-y-auto pb-2 pr-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                      >
+                        {renderedItems.map((item) =>
+                          item.kind === 'text' ? (
+                            <ChatBubble key={item.id} message={item} />
+                          ) : (
+                            <QuickReplyOptions key={item.id} item={item} />
+                          )
+                        )}
 
-                      {typingSender === 'business' && (
-                        <div className="flex translate-y-0 justify-start opacity-100 transition-all duration-300 ease-out">
-                          <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#e5e9ef] bg-white px-3 py-2 shadow-[0_1px_1.5px_rgba(15,23,42,0.08)]">
-                            <span className="text-[11px] text-slate-500">typing...</span>
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
+                        {typingSender === 'business' && (
+                          <div className="flex translate-y-0 justify-start opacity-100 transition-all duration-300 ease-out">
+                            <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#e5e9ef] bg-white px-3 py-2 shadow-[0_1px_1.5px_rgba(15,23,42,0.08)]">
+                              <span className="text-[11px] text-slate-500">typing...</span>
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
+                            </div>
                           </div>
-                        </div>
-                      )}
-
-                      <div className="-mx-2.5 mt-auto flex items-center gap-2 border-t border-[#dfe5de] bg-white px-2.5 py-2">
-                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
-                          <IconPlus className="h-5 w-5" />
-                        </span>
-                        <div className="flex flex-1 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
-                          <span className="flex-1 text-xs text-slate-400">Message</span>
-                          <IconSmile className="h-4 w-4 text-slate-400" />
-                        </div>
-                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
-                          <IconCamera className="h-4 w-4" />
-                        </span>
-                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
-                          <IconMic className="h-4 w-4" />
-                        </span>
+                        )}
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 border-t border-[#dfe5de] bg-white px-2.5 py-2">
+                      <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                        <IconPlus className="h-5 w-5" />
+                      </span>
+                      <div className="flex flex-1 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
+                        <span className="flex-1 text-xs text-slate-400">Message</span>
+                        <IconSmile className="h-4 w-4 text-slate-400" />
+                      </div>
+                      <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                        <IconCamera className="h-4 w-4" />
+                      </span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                        <IconMic className="h-4 w-4" />
+                      </span>
                     </div>
                   </div>
                 </div>
