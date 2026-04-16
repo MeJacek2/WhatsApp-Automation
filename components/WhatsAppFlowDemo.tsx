@@ -522,10 +522,13 @@ export default function WhatsAppFlowDemo({
         </div>
 
         <div className="relative">
+          <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
+            <div className="h-72 w-72 rounded-full bg-emerald-100/55 blur-3xl sm:h-80 sm:w-80" />
+          </div>
           <div className="pointer-events-none absolute -left-1 top-28 hidden h-14 w-1 rounded-r-full bg-slate-300/70 lg:block" />
           <div className="pointer-events-none absolute -right-1 top-36 hidden h-24 w-1 rounded-l-full bg-slate-300/70 lg:block" />
 
-          <div className="mx-auto w-full max-w-[350px] sm:max-w-[360px]">
+          <div className="mx-auto w-full max-w-[365px] sm:max-w-[385px]">
             <div className="relative aspect-[390/795] rounded-[3rem] border-2 border-black bg-gradient-to-b from-slate-100 to-slate-200 p-2 shadow-[0_26px_60px_-35px_rgba(15,23,42,0.55)]">
               <div className="relative h-full overflow-hidden rounded-[2.7rem] border-2 border-black/95 bg-[#e8efe9]">
                 <div className="absolute inset-x-0 top-0 z-20">
