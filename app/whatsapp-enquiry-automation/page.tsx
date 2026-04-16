@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import WhatsAppFlowDemo from '@/components/WhatsAppFlowDemo';
 
-const HERO_IMAGE_SRC = '/hero-business-owner.webp';
+const HERO_IMAGE_SRC = '/logo-mishji-site.webp';
+const PROBLEM_IMAGE_SRC = '/logo-mishji-site.webp';
 
 export const metadata: Metadata = {
   title: 'WhatsApp Enquiry Automation | Mishji',
@@ -367,43 +368,48 @@ export default function WhatsAppEnquiryAutomationPage() {
         aria-labelledby="problem-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-[0_28px_65px_-40px_rgba(15,23,42,0.35)] sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#3f8f6f]">
-              THE PROBLEM
-            </p>
-            <h2
-              id="problem-title"
-              className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
-            >
-              Delayed replies quietly kill conversions
-            </h2>
-            <p className="mt-5 max-w-4xl text-base leading-7 text-slate-600">
-              When a prospect reaches out, they are ready now, not later. But
-              many businesses still rely on manual replies, inconsistent
-              follow-up, and staff availability to manage enquiries. That
-              creates friction, delays, and lost opportunities.
-            </p>
-            <div className="mt-7">
-              <CheckList items={problemBullets} />
-            </div>
-            <p className="mt-7 text-base font-medium text-slate-800">
-              Every missed or delayed enquiry is potential revenue walking away.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <PrimaryButton href="#lead-form">Book a Demo</PrimaryButton>
-              <TextCta href="#demo">See How It Works</TextCta>
-            </div>
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-[0_28px_65px_-40px_rgba(15,23,42,0.35)] sm:p-8">
+            <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#3f8f6f]">
+                  THE PROBLEM
+                </p>
+                <h2
+                  id="problem-title"
+                  className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+                >
+                  Delayed replies quietly kill conversions
+                </h2>
+                <p className="mt-5 text-base leading-7 text-slate-600">
+                  When a prospect reaches out, they are ready now, not later.
+                  But many businesses still rely on manual replies, inconsistent
+                  follow-up, and staff availability to manage enquiries. That
+                  creates friction, delays, and lost opportunities.
+                </p>
+                <div className="mt-7">
+                  <CheckList items={problemBullets} />
+                </div>
+                <p className="mt-7 text-base font-medium text-slate-800">
+                  Every missed or delayed enquiry is potential revenue walking
+                  away.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <PrimaryButton href="#lead-form">Book a Demo</PrimaryButton>
+                  <TextCta href="#demo">See How It Works</TextCta>
+                </div>
+              </div>
 
-            <div className="relative -mx-6 mt-8 overflow-hidden border-y border-slate-200/90 sm:-mx-10">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/65 via-white/15 to-transparent" />
-              <div className="relative h-48 sm:h-56">
-                <Image
-                  src={HERO_IMAGE_SRC}
-                  alt="Business owner reviewing incoming enquiries"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 960px"
-                  className="object-cover object-center"
-                />
+              <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-[0_20px_48px_-35px_rgba(15,23,42,0.45)]">
+                <div className="relative h-64 sm:h-72 lg:h-[24rem]">
+                  <Image
+                    src={PROBLEM_IMAGE_SRC}
+                    alt="Business owner handling WhatsApp enquiries"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 520px"
+                    className="object-cover object-center"
+                  />
+                </div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent" />
               </div>
             </div>
           </div>
