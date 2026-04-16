@@ -82,6 +82,39 @@ type WhatsAppFlowDemoProps = {
   className?: string;
 };
 
+type ChatBubbleProps = {
+  message: ChatMessage;
+};
+
+function ChatBubble({ message }: ChatBubbleProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const isCustomer = message.sender === 'customer';
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsVisible(true), 20);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className={`flex ${isCustomer ? 'justify-end' : 'justify-start'}`}>
+      <div
+        className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 shadow-sm transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[78%] ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+        } ${
+          isCustomer
+            ? 'rounded-br-md border border-emerald-200/70 bg-emerald-100/80 text-slate-800'
+            : 'rounded-bl-md border border-slate-200 bg-white text-slate-800'
+        }`}
+      >
+        <p className="text-[13.5px] leading-5 sm:text-sm">{message.text}</p>
+        <p className="mt-1 text-[10px] font-medium text-slate-400">
+          {message.timestamp}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Minimal in-file viewport hook to start the chat animation only once
  * when the component enters the viewport.
@@ -226,34 +259,12 @@ export default function WhatsAppFlowDemo({
               </div>
 
               <div className="flex min-h-[360px] flex-col gap-2.5 sm:min-h-[390px]">
-                {renderedMessages.map((message) => {
-                  const isCustomer = message.sender === 'customer';
-
-                  return (
-                    <div
-                      key={message.id}
-                      className={`flex animate-[message-in_420ms_cubic-bezier(0.22,1,0.36,1)_both] ${
-                        isCustomer ? 'justify-end' : 'justify-start'
-                      }`}
-                    >
-                      <div
-                        className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 shadow-sm sm:max-w-[78%] ${
-                          isCustomer
-                            ? 'rounded-br-md border border-emerald-200/70 bg-emerald-100/80 text-slate-800'
-                            : 'rounded-bl-md border border-slate-200 bg-white text-slate-800'
-                        }`}
-                      >
-                        <p className="text-[13.5px] leading-5 sm:text-sm">{message.text}</p>
-                        <p className="mt-1 text-[10px] font-medium text-slate-400">
-                          {message.timestamp}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
+                {renderedMessages.map((message) => (
+                  <ChatBubble key={message.id} message={message} />
+                ))}
 
                 {typingSender === 'business' && (
-                  <div className="flex animate-[message-in_260ms_ease-out_both] justify-start">
+                  <div className="flex translate-y-0 justify-start opacity-100 transition-all duration-300 ease-out">
                     <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3 py-2 shadow-sm">
                       <span className="sr-only">Business is typing</span>
                       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
@@ -267,19 +278,6 @@ export default function WhatsAppFlowDemo({
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes message-in {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }
