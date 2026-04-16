@@ -236,7 +236,7 @@ export default function WhatsAppEnquiryAutomationPage() {
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/whatsapp-enquiry-automation" className="inline-flex items-center">
             <Image
-              src="/mishji-logo.svg"
+              src="/logo-mishji-site.webp"
               alt="Mishji"
               width={120}
               height={38}
@@ -786,7 +786,7 @@ export default function WhatsAppEnquiryAutomationPage() {
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-[1.3fr_0.8fr_1fr] lg:px-8">
           <div>
             <Image
-              src="/mishji-logo.svg"
+              src="/logo-mishji-site.webp"
               alt="Mishji"
               width={128}
               height={40}
