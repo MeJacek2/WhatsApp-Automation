@@ -1,9 +1,5 @@
-import WhatsAppFlowDemo from '@/components/WhatsAppFlowDemo';
+import { redirect } from 'next/navigation';
 
 export default function HomePage() {
-  return (
-    <main className="min-h-screen bg-[#fcfdfc]">
-      <WhatsAppFlowDemo />
-    </main>
-  );
+  redirect('/whatsapp-enquiry-automation');
 }
