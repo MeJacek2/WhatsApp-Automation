@@ -195,7 +195,7 @@ function SecondaryButton({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 ${className}`}
+      className={`inline-flex items-center justify-center rounded-xl border border-slate-300 bg-transparent px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 ${className}`}
     >
       {children}
     </Link>
@@ -233,7 +233,7 @@ export default function WhatsAppEnquiryAutomationPage() {
   return (
     <main className="bg-[#f6f8f7] text-slate-900">
       <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/whatsapp-enquiry-automation" className="inline-flex items-center">
             <Image
               src="/logo-mishji-site.webp"
@@ -244,12 +244,26 @@ export default function WhatsAppEnquiryAutomationPage() {
               priority
             />
           </Link>
+          <nav className="hidden items-center gap-6 md:flex">
+            <Link
+              href="#how-it-works"
+              className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
+            >
+              How it Works
+            </Link>
+            <Link
+              href="#faq"
+              className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
+            >
+              FAQ
+            </Link>
+          </nav>
           <PrimaryButton href="#lead-form">Book a Demo</PrimaryButton>
         </div>
       </header>
 
       <section
-        className="relative overflow-hidden bg-white pb-20 pt-14 sm:pb-24 sm:pt-20"
+        className="relative overflow-hidden bg-white pb-24 pt-16 sm:pb-28 sm:pt-24"
         aria-labelledby="hero-title"
       >
         <div className="pointer-events-none absolute -left-20 top-8 h-80 w-80 rounded-full bg-emerald-100/45 blur-3xl" />
@@ -308,6 +322,16 @@ export default function WhatsAppEnquiryAutomationPage() {
             <p className="relative mt-3 text-xl font-semibold text-slate-900">
               Better enquiry response starts with structure.
             </p>
+            <div className="relative mt-4 overflow-hidden rounded-2xl border border-slate-200/90">
+              <div
+                className="h-40 bg-cover bg-center sm:h-44"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, rgba(255,255,255,0.24), rgba(255,255,255,0.02)), url('/hero-business-owner.webp')",
+                }}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/45 via-transparent to-transparent" />
+            </div>
             <p className="relative mt-3 text-sm leading-7 text-slate-600">
               Build an automation layer that responds quickly, captures key
               details, and gives your team cleaner conversations to close.
@@ -336,7 +360,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-[#f8faf9] py-14 sm:py-20"
+        className="border-t border-slate-100 bg-[#f8faf9] py-12 sm:py-16"
         aria-labelledby="problem-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -371,7 +395,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-white py-14 sm:py-20"
+        className="border-t border-slate-100 bg-white py-12 sm:py-16"
         aria-labelledby="solution-title"
       >
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-10 px-4 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
@@ -414,7 +438,7 @@ export default function WhatsAppEnquiryAutomationPage() {
 
       <section
         id="demo"
-        className="scroll-mt-24 border-t border-slate-100 bg-gradient-to-b from-[#f3fbf8] to-white py-4 sm:py-8"
+        className="scroll-mt-24 border-t border-slate-100 bg-gradient-to-b from-[#f3fbf8] to-white py-6 sm:py-10"
       >
         <div className="mx-auto w-full max-w-7xl rounded-[2rem] border border-emerald-100/80 bg-white/70 shadow-[0_35px_90px_-55px_rgba(10,124,102,0.45)]">
           <WhatsAppFlowDemo
@@ -427,7 +451,7 @@ export default function WhatsAppEnquiryAutomationPage() {
           />
         </div>
         <div className="mx-auto mt-4 w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-emerald-100/80 bg-gradient-to-r from-white via-[#f6fffb] to-white p-5 shadow-[0_24px_50px_-38px_rgba(10,124,102,0.45)] sm:flex sm:items-center sm:justify-between sm:p-6">
+          <div className="rounded-2xl border border-emerald-200/80 bg-gradient-to-r from-white via-[#f6fffb] to-[#eefcf6] p-5 shadow-[0_26px_58px_-36px_rgba(10,124,102,0.5)] sm:flex sm:items-center sm:justify-between sm:p-7">
             <p className="text-base font-medium text-slate-800">
               Ready to apply this flow to your own enquiry process?
             </p>
@@ -442,7 +466,8 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-white py-14 sm:py-20"
+        id="how-it-works"
+        className="border-t border-slate-100 bg-white py-12 sm:py-16"
         aria-labelledby="how-it-works-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -472,7 +497,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-[#f8faf9] py-14 sm:py-20"
+        className="border-t border-slate-100 bg-[#f8faf9] py-10 sm:py-14"
         aria-labelledby="benefits-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -499,7 +524,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-white py-14 sm:py-20"
+        className="border-t border-slate-100 bg-white py-12 sm:py-16"
         aria-labelledby="industries-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -527,7 +552,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-[#f8faf9] py-14 sm:py-20"
+        className="border-t border-slate-100 bg-[#f8faf9] py-12 sm:py-16"
         aria-labelledby="practical-title"
       >
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -557,7 +582,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-white py-14 sm:py-20"
+        className="border-t border-slate-100 bg-white py-12 sm:py-16"
         aria-labelledby="offer-title"
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -604,7 +629,8 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-[#f8faf9] py-14 sm:py-20"
+        id="faq"
+        className="border-t border-slate-100 bg-[#f8faf9] py-10 sm:py-14"
         aria-labelledby="faq-title"
       >
         <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -639,7 +665,7 @@ export default function WhatsAppEnquiryAutomationPage() {
       </section>
 
       <section
-        className="border-t border-slate-100 bg-white py-14 sm:py-20"
+        className="border-t border-slate-100 bg-white py-12 sm:py-16"
         aria-labelledby="final-cta-title"
       >
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -669,7 +695,7 @@ export default function WhatsAppEnquiryAutomationPage() {
 
       <section
         id="lead-form"
-        className="border-t border-slate-100 bg-[#f8faf9] pb-20 pt-14 sm:pb-24 sm:pt-20"
+        className="border-t border-slate-100 bg-[#f8faf9] pb-16 pt-12 sm:pb-20 sm:pt-16"
         aria-labelledby="lead-form-title"
       >
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
@@ -782,24 +808,24 @@ export default function WhatsAppEnquiryAutomationPage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-800 bg-[#0f1722] py-12 text-slate-200">
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-[1.3fr_0.8fr_1fr] lg:px-8">
+      <footer className="border-t border-slate-800 bg-[#0f1722] py-10 text-slate-100">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-7 px-4 sm:px-6 md:grid-cols-[1.3fr_0.8fr_1fr] lg:px-8">
           <div>
             <Image
               src="/logo-mishji-site.webp"
               alt="Mishji"
               width={128}
               height={40}
-              className="h-10 w-auto rounded-sm bg-white/90 p-1"
+              className="h-9 w-auto rounded-sm bg-white/95 p-1"
             />
-            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-300">
+            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-200">
               WhatsApp enquiry automation designed for faster response journeys
               and cleaner conversion workflows.
             </p>
           </div>
           <div>
             <p className="text-sm font-semibold text-white">Quick Links</p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-300">
+            <ul className="mt-3 space-y-2 text-sm text-slate-200">
               <li>
                 <Link href="#solution-title" className="hover:text-white">
                   Solutions
@@ -819,7 +845,7 @@ export default function WhatsAppEnquiryAutomationPage() {
           </div>
           <div>
             <p className="text-sm font-semibold text-white">Contact</p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-300">
+            <ul className="mt-3 space-y-2 text-sm text-slate-200">
               <li>
                 <a href="mailto:hello@mishji.com" className="hover:text-white">
                   hello@mishji.com
@@ -838,7 +864,7 @@ export default function WhatsAppEnquiryAutomationPage() {
             </ul>
           </div>
         </div>
-        <div className="mx-auto mt-10 w-full max-w-6xl border-t border-slate-700/70 px-4 pt-6 text-xs text-slate-400 sm:px-6 lg:px-8">
+        <div className="mx-auto mt-8 w-full max-w-6xl border-t border-slate-700/70 px-4 pt-5 text-xs text-slate-300 sm:px-6 lg:px-8">
           © {new Date().getFullYear()} Mishji. All rights reserved.
         </div>
       </footer>

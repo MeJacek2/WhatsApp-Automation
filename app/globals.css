@@ -16,6 +16,10 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: #fcfdfc;
   color: #0f172a;
