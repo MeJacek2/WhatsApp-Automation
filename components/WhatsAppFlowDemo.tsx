@@ -4,8 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 type MessageSender = 'customer' | 'business';
 
-type ChatMessage = {
+type ChatTextStep = {
   id: string;
+  type: 'text';
   sender: MessageSender;
   text: string;
   timestamp: string;
@@ -21,9 +22,46 @@ type ChatMessage = {
   typingDurationMs?: number;
 };
 
-const DEFAULT_MESSAGES: ChatMessage[] = [
+type QuickReplyStep = {
+  id: string;
+  type: 'quick-replies';
+  sender: 'business';
+  options: string[];
+  /**
+   * Simulated selected option shown after a short delay.
+   */
+  autoSelectOption: string;
+  delayMs: number;
+  autoSelectDelayMs: number;
+  /**
+   * How long the selected state is shown before converting to customer bubble.
+   */
+  selectionHoldMs?: number;
+  selectedReplyTimestamp: string;
+};
+
+type ChatFlowStep = ChatTextStep | QuickReplyStep;
+type RenderedTextItem = {
+  kind: 'text';
+  id: string;
+  sender: MessageSender;
+  text: string;
+  timestamp: string;
+};
+
+type RenderedQuickRepliesItem = {
+  kind: 'quick-replies';
+  id: string;
+  options: string[];
+  selectedOption: string | null;
+};
+
+type RenderedChatItem = RenderedTextItem | RenderedQuickRepliesItem;
+
+const DEFAULT_FLOW_STEPS: ChatFlowStep[] = [
   {
     id: 'm1',
+    type: 'text',
     sender: 'customer',
     text: 'Hi, I want to know your prices and available appointments.',
     timestamp: '10:02 AM',
@@ -31,37 +69,71 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
   },
   {
     id: 'm2',
+    type: 'text',
     sender: 'business',
-    text: "Hi Sarah, thank you for contacting BrightSmile Clinic. We've received your enquiry about teeth cleaning.",
+    text: "Hi, thank you for contacting BrightSmile Clinic. We'd be happy to help.",
     timestamp: '10:03 AM',
     delayMs: 700,
     showTypingBefore: true,
-    typingDurationMs: 1100,
+    typingDurationMs: 1050,
   },
   {
     id: 'm3',
+    type: 'text',
     sender: 'business',
-    text: 'Would you prefer a morning or evening appointment?',
+    text: 'Which treatment or service are you interested in?',
     timestamp: '10:03 AM',
-    delayMs: 750,
+    delayMs: 650,
     showTypingBefore: true,
-    typingDurationMs: 900,
+    typingDurationMs: 850,
+  },
+  {
+    id: 'q1',
+    type: 'quick-replies',
+    sender: 'business',
+    options: [
+      'Teeth Cleaning',
+      'Dental Checkup',
+      'Teeth Whitening',
+      'Braces Consultation',
+      'Other',
+    ],
+    autoSelectOption: 'Teeth Cleaning',
+    delayMs: 500,
+    autoSelectDelayMs: 1300,
+    selectionHoldMs: 550,
+    selectedReplyTimestamp: '10:04 AM',
   },
   {
     id: 'm4',
-    sender: 'customer',
-    text: 'Evening would be better.',
+    type: 'text',
+    sender: 'business',
+    text: 'Great. Would you prefer a morning or evening appointment?',
     timestamp: '10:04 AM',
-    delayMs: 900,
+    delayMs: 650,
+    showTypingBefore: true,
+    typingDurationMs: 800,
+  },
+  {
+    id: 'q2',
+    type: 'quick-replies',
+    sender: 'business',
+    options: ['Morning', 'Evening'],
+    autoSelectOption: 'Evening',
+    delayMs: 450,
+    autoSelectDelayMs: 1150,
+    selectionHoldMs: 500,
+    selectedReplyTimestamp: '10:05 AM',
   },
   {
     id: 'm5',
+    type: 'text',
     sender: 'business',
     text: 'Perfect. We still have a few evening slots this week. Would you like us to help you book one?',
-    timestamp: '10:04 AM',
-    delayMs: 850,
+    timestamp: '10:05 AM',
+    delayMs: 650,
     showTypingBefore: true,
-    typingDurationMs: 1000,
+    typingDurationMs: 950,
   },
 ];
 
@@ -76,14 +148,14 @@ type WhatsAppFlowDemoProps = {
   description?: string;
   bullets?: string[];
   /**
-   * Edit this array to customize the message sequence for your own funnel.
+   * Edit this array to customize the chatbot conversation flow.
    */
-  messages?: ChatMessage[];
+  flowSteps?: ChatFlowStep[];
   className?: string;
 };
 
 type ChatBubbleProps = {
-  message: ChatMessage;
+  message: RenderedTextItem;
 };
 
 function ChatBubble({ message }: ChatBubbleProps) {
@@ -115,6 +187,50 @@ function ChatBubble({ message }: ChatBubbleProps) {
   );
 }
 
+type QuickReplyOptionsProps = {
+  item: RenderedQuickRepliesItem;
+};
+
+function QuickReplyOptions({ item }: QuickReplyOptionsProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsVisible(true), 20);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="flex justify-start">
+      <div
+        className={`max-w-[88%] rounded-2xl rounded-bl-md border border-[#d6efe6] bg-white/95 p-2 shadow-[0_1px_1.5px_rgba(15,23,42,0.08)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[82%] ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+        }`}
+      >
+        <div className="flex flex-wrap gap-1.5">
+          {item.options.map((option) => {
+            const isSelected = item.selectedOption === option;
+            return (
+              <button
+                key={option}
+                type="button"
+                disabled
+                className={`rounded-full border px-3 py-1.5 text-[11px] font-medium transition-all sm:text-xs ${
+                  isSelected
+                    ? 'border-[#159a7d] bg-[#e8f8f2] text-[#0a7c66] shadow-[0_3px_10px_-6px_rgba(10,124,102,0.55)]'
+                    : 'border-[#b8e4d6] bg-white text-[#0a7c66]'
+                }`}
+                aria-label={isSelected ? `${option} selected` : option}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Minimal in-file viewport hook to start the chat animation only once
  * when the component enters the viewport.
@@ -123,7 +239,6 @@ function useInViewOnce<T extends HTMLElement>(
   options: IntersectionObserverInit = { threshold: 0.35 }
 ) {
   const ref = useRef<T | null>(null);
-  const [isInView, setIsInView] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
 
   useEffect(() => {
@@ -134,7 +249,6 @@ function useInViewOnce<T extends HTMLElement>(
       const [entry] = entries;
       if (!entry) return;
       if (entry.isIntersecting) {
-        setIsInView(true);
         setHasTriggered(true);
         observer.disconnect();
       }
@@ -144,7 +258,7 @@ function useInViewOnce<T extends HTMLElement>(
     return () => observer.disconnect();
   }, [hasTriggered, options]);
 
-  return { ref, isInView, hasTriggered };
+  return { ref, hasTriggered };
 }
 
 function getInitials(value: string) {
@@ -167,51 +281,96 @@ export default function WhatsAppFlowDemo({
     'Ask the right qualifying question',
     'Follow up automatically if there is no response',
   ],
-  messages = DEFAULT_MESSAGES,
+  flowSteps = DEFAULT_FLOW_STEPS,
   className = '',
 }: WhatsAppFlowDemoProps) {
   const { ref, hasTriggered } = useInViewOnce<HTMLDivElement>({
     threshold: 0.3,
   });
 
-  const [visibleCount, setVisibleCount] = useState(0);
+  const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
-
-  const safeMessages = useMemo(() => messages ?? DEFAULT_MESSAGES, [messages]);
+  const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
 
   useEffect(() => {
     if (!hasTriggered) return;
-    if (!safeMessages.length) return;
+    if (!safeFlowSteps.length) return;
 
     let isCancelled = false;
     const timers: number[] = [];
 
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const timer = window.setTimeout(resolve, ms);
+        timers.push(timer);
+      });
+
     const runSequence = async () => {
-      for (let index = 0; index < safeMessages.length; index += 1) {
-        const current = safeMessages[index];
+      for (let index = 0; index < safeFlowSteps.length; index += 1) {
+        const current = safeFlowSteps[index];
         if (!current || isCancelled) return;
 
-        await new Promise<void>((resolve) => {
-          const waitTimer = window.setTimeout(resolve, current.delayMs);
-          timers.push(waitTimer);
-        });
+        await wait(current.delayMs);
         if (isCancelled) return;
 
-        if (current.showTypingBefore && current.sender === 'business') {
-          setTypingSender('business');
-          await new Promise<void>((resolve) => {
-            const typingTimer = window.setTimeout(
-              resolve,
-              current.typingDurationMs ?? 900
-            );
-            timers.push(typingTimer);
-          });
-          if (isCancelled) return;
-          setTypingSender(null);
+        if (current.type === 'text') {
+          if (current.showTypingBefore && current.sender === 'business') {
+            setTypingSender('business');
+            await wait(current.typingDurationMs ?? 900);
+            if (isCancelled) return;
+            setTypingSender(null);
+          }
+
+          setRenderedItems((prev) => [
+            ...prev,
+            {
+              kind: 'text',
+              id: current.id,
+              sender: current.sender,
+              text: current.text,
+              timestamp: current.timestamp,
+            },
+          ]);
+          continue;
         }
 
-        setVisibleCount((prev) => Math.min(prev + 1, safeMessages.length));
+        setRenderedItems((prev) => [
+          ...prev,
+          {
+            kind: 'quick-replies',
+            id: current.id,
+            options: current.options,
+            selectedOption: null,
+          },
+        ]);
+
+        await wait(current.autoSelectDelayMs);
+        if (isCancelled) return;
+
+        setRenderedItems((prev) =>
+          prev.map((item) =>
+            item.kind === 'quick-replies' && item.id === current.id
+              ? { ...item, selectedOption: current.autoSelectOption }
+              : item
+          )
+        );
+
+        await wait(current.selectionHoldMs ?? 500);
+        if (isCancelled) return;
+
+        setRenderedItems((prev) => [
+          ...prev.filter(
+            (item) => !(item.kind === 'quick-replies' && item.id === current.id)
+          ),
+          {
+            kind: 'text',
+            id: `${current.id}-selected`,
+            sender: 'customer',
+            text: current.autoSelectOption,
+            timestamp: current.selectedReplyTimestamp,
+          },
+        ]);
       }
     };
 
@@ -221,9 +380,7 @@ export default function WhatsAppFlowDemo({
       isCancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
     };
-  }, [hasTriggered, safeMessages]);
-
-  const renderedMessages = safeMessages.slice(0, visibleCount);
+  }, [hasTriggered, safeFlowSteps]);
 
   return (
     <section
@@ -303,9 +460,13 @@ export default function WhatsAppFlowDemo({
                   <div className="relative flex-1 overflow-hidden px-2.5 py-3">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.65)_1px,transparent_0)] [background-size:16px_16px] opacity-30" />
                     <div className="relative flex h-full flex-col gap-2.5">
-                      {renderedMessages.map((message) => (
-                        <ChatBubble key={message.id} message={message} />
-                      ))}
+                      {renderedItems.map((item) =>
+                        item.kind === 'text' ? (
+                          <ChatBubble key={item.id} message={item} />
+                        ) : (
+                          <QuickReplyOptions key={item.id} item={item} />
+                        )
+                      )}
 
                       {typingSender === 'business' && (
                         <div className="flex translate-y-0 justify-start opacity-100 transition-all duration-300 ease-out">
