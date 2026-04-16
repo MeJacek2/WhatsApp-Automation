@@ -3,8 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import WhatsAppFlowDemo from '@/components/WhatsAppFlowDemo';
 
-const HERO_IMAGE_SRC = '/logo-mishji-site.webp';
-const PROBLEM_IMAGE_SRC = '/logo-mishji-site.webp';
+const HERO_IMAGE_SRC = '/home-hero.png';
+const PROBLEM_IMAGE_SRC = '/the-problem.png';
 
 export const metadata: Metadata = {
   title: 'WhatsApp Enquiry Automation | Mishji',
@@ -330,7 +330,7 @@ export default function WhatsAppEnquiryAutomationPage() {
                 src={HERO_IMAGE_SRC}
                 alt="Business owner handling customer enquiries on mobile"
                 fill
-                sizes="(max-width: 1024px) 100vw, 520px"
+                sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 520px"
                 className="object-cover object-center"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
@@ -405,7 +405,7 @@ export default function WhatsAppEnquiryAutomationPage() {
                     src={PROBLEM_IMAGE_SRC}
                     alt="Business owner handling WhatsApp enquiries"
                     fill
-                    sizes="(max-width: 1024px) 100vw, 520px"
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 540px"
                     className="object-cover object-center"
                   />
                 </div>
