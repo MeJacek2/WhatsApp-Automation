@@ -231,6 +231,88 @@ function QuickReplyOptions({ item }: QuickReplyOptionsProps) {
   );
 }
 
+function IconBase({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function IconChevronLeft({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <path d="M15 18L9 12L15 6" />
+    </IconBase>
+  );
+}
+
+function IconPhone({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <path d="M22 16.9V20a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3.1a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.4 2.1L8 9.6a16 16 0 0 0 6.4 6.4l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2Z" />
+    </IconBase>
+  );
+}
+
+function IconVideo({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <path d="M15 10.5V7.8A1.8 1.8 0 0 0 13.2 6H5.8A1.8 1.8 0 0 0 4 7.8v8.4A1.8 1.8 0 0 0 5.8 18h7.4a1.8 1.8 0 0 0 1.8-1.8v-2.7l5-2.7v5.4Z" />
+    </IconBase>
+  );
+}
+
+function IconPlus({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <path d="M12 5v14M5 12h14" />
+    </IconBase>
+  );
+}
+
+function IconCamera({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <path d="M4.5 8.5h3l1.3-2h6.4l1.3 2h3A1.5 1.5 0 0 1 21 10v8.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5V10A1.5 1.5 0 0 1 4.5 8.5Z" />
+      <circle cx="12" cy="14.2" r="3.2" />
+    </IconBase>
+  );
+}
+
+function IconMic({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <rect x="9" y="4" width="6" height="10" rx="3" />
+      <path d="M6.8 11.5a5.2 5.2 0 1 0 10.4 0M12 16.8V20" />
+    </IconBase>
+  );
+}
+
+function IconSmile({ className = '' }: { className?: string }) {
+  return (
+    <IconBase className={className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.6 14.6c.9 1 2 1.4 3.4 1.4s2.5-.4 3.4-1.4M9 10h.01M15 10h.01" />
+    </IconBase>
+  );
+}
+
 /**
  * Minimal in-file viewport hook to start the chat animation only once
  * when the component enters the viewport.
@@ -290,15 +372,17 @@ export default function WhatsAppFlowDemo({
 
   const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
-  const [hasPlayed, setHasPlayed] = useState(false);
+  const hasPlayedRef = useRef(false);
   const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
 
   useEffect(() => {
     if (!hasTriggered) return;
-    if (hasPlayed) return;
+    if (hasPlayedRef.current) return;
     if (!safeFlowSteps.length) return;
-    setHasPlayed(true);
+    hasPlayedRef.current = true;
+    setRenderedItems([]);
+    setTypingSender(null);
 
     let isCancelled = false;
     const timers: number[] = [];
@@ -383,7 +467,7 @@ export default function WhatsAppFlowDemo({
       isCancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
     };
-  }, [hasTriggered, hasPlayed, safeFlowSteps]);
+  }, [hasTriggered, safeFlowSteps]);
 
   return (
     <section
@@ -419,9 +503,9 @@ export default function WhatsAppFlowDemo({
           <div className="pointer-events-none absolute -left-1 top-28 hidden h-14 w-1 rounded-r-full bg-slate-300/70 lg:block" />
           <div className="pointer-events-none absolute -right-1 top-36 hidden h-24 w-1 rounded-l-full bg-slate-300/70 lg:block" />
 
-          <div className="mx-auto w-full max-w-[360px] sm:max-w-[375px]">
-            <div className="relative aspect-[390/790] rounded-[3rem] border border-slate-300/90 bg-gradient-to-b from-slate-100 to-slate-200 p-2.5 shadow-[0_30px_70px_-35px_rgba(15,23,42,0.55)]">
-              <div className="relative h-full overflow-hidden rounded-[2.85rem] border border-slate-300/70 bg-[#e8efe9]">
+          <div className="mx-auto w-full max-w-[350px] sm:max-w-[360px]">
+            <div className="relative aspect-[390/770] rounded-[3rem] border-2 border-black bg-gradient-to-b from-slate-100 to-slate-200 p-2 shadow-[0_26px_60px_-35px_rgba(15,23,42,0.55)]">
+              <div className="relative h-full overflow-hidden rounded-[2.7rem] border-2 border-black/95 bg-[#e8efe9]">
                 <div className="absolute inset-x-0 top-0 z-20">
                   <div className="px-6 pt-2.5">
                     <div className="flex items-center justify-between text-[11px] font-semibold tracking-wide text-slate-900/85">
@@ -439,24 +523,22 @@ export default function WhatsAppFlowDemo({
                 </div>
 
                 <div className="relative z-10 flex h-full flex-col pt-14">
-                  <div className="flex items-center gap-2.5 bg-[#0a7c66]/95 px-3 py-2.5 text-white">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/15 text-xs font-semibold leading-none">
-                      {'<'}
+                  <div className="flex items-center gap-2.5 border-b border-[#e4e6e1] bg-white px-3 py-2.5 text-slate-900">
+                    <span className="inline-flex h-6 w-6 items-center justify-center text-slate-800">
+                      <IconChevronLeft className="h-4 w-4" />
                     </span>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-xs font-semibold text-emerald-800">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-500">
                       {businessInitials}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[13px] font-semibold">{businessName}</p>
-                      <p className="truncate text-[10px] text-white/80">{statusText}</p>
+                      <p className="truncate text-[10px] text-slate-500">online</p>
                     </div>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/15">
-                      <span className="h-2 w-2 rounded-full border border-white/90" />
+                    <span className="inline-flex h-6 w-6 items-center justify-center text-slate-700">
+                      <IconVideo className="h-4 w-4" />
                     </span>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/15">
-                      <span className="h-[3px] w-[3px] rounded-full bg-white" />
-                      <span className="ml-0.5 h-[3px] w-[3px] rounded-full bg-white" />
-                      <span className="ml-0.5 h-[3px] w-[3px] rounded-full bg-white" />
+                    <span className="inline-flex h-6 w-6 items-center justify-center text-slate-700">
+                      <IconPhone className="h-4 w-4" />
                     </span>
                   </div>
 
@@ -482,13 +564,19 @@ export default function WhatsAppFlowDemo({
                         </div>
                       )}
 
-                      <div className="mt-auto flex items-center gap-2 rounded-full bg-white/95 px-3 py-2 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
-                        <span className="inline-block h-4 w-4 rounded-full border border-slate-300" />
-                        <span className="flex-1 text-xs text-slate-400">Message</span>
-                        <span className="h-3 w-3 rounded-sm border border-slate-300" />
-                        <span className="h-3 w-3 rounded-sm border border-slate-300" />
-                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#0a7c66] text-[10px] text-white">
-                          ●
+                      <div className="-mx-2.5 mt-auto flex items-center gap-2 border-t border-[#dfe5de] bg-white px-2.5 py-2">
+                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                          <IconPlus className="h-5 w-5" />
+                        </span>
+                        <div className="flex flex-1 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
+                          <span className="flex-1 text-xs text-slate-400">Message</span>
+                          <IconSmile className="h-4 w-4 text-slate-400" />
+                        </div>
+                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                          <IconCamera className="h-4 w-4" />
+                        </span>
+                        <span className="inline-flex h-8 w-8 items-center justify-center text-slate-700">
+                          <IconMic className="h-4 w-4" />
                         </span>
                       </div>
                     </div>
