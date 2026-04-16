@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import WhatsAppFlowDemo from '@/components/WhatsAppFlowDemo';
 
+const HERO_IMAGE_SRC = '/hero-business-owner.webp';
+
 export const metadata: Metadata = {
   title: 'WhatsApp Enquiry Automation | Mishji',
   description:
@@ -322,14 +324,15 @@ export default function WhatsAppEnquiryAutomationPage() {
             <p className="relative mt-3 text-xl font-semibold text-slate-900">
               Better enquiry response starts with structure.
             </p>
-            <div className="relative mt-4 overflow-hidden rounded-2xl border border-slate-200/90">
-              <div
-                className="h-40 bg-cover bg-center sm:h-44"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(90deg, rgba(255,255,255,0.24), rgba(255,255,255,0.02)), url('/hero-business-owner.webp')",
-                }}
+            <div className="relative mt-4 h-40 overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 sm:h-44">
+              <Image
+                src={HERO_IMAGE_SRC}
+                alt="Business owner handling customer enquiries on mobile"
+                fill
+                sizes="(max-width: 1024px) 100vw, 520px"
+                className="object-cover object-center"
               />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/45 via-transparent to-transparent" />
             </div>
             <p className="relative mt-3 text-sm leading-7 text-slate-600">
@@ -389,6 +392,19 @@ export default function WhatsAppEnquiryAutomationPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <PrimaryButton href="#lead-form">Book a Demo</PrimaryButton>
               <TextCta href="#demo">See How It Works</TextCta>
+            </div>
+
+            <div className="relative -mx-6 mt-8 overflow-hidden border-y border-slate-200/90 sm:-mx-10">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/65 via-white/15 to-transparent" />
+              <div className="relative h-48 sm:h-56">
+                <Image
+                  src={HERO_IMAGE_SRC}
+                  alt="Business owner reviewing incoming enquiries"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 960px"
+                  className="object-cover object-center"
+                />
+              </div>
             </div>
           </div>
         </div>
