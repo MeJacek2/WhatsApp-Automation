@@ -372,21 +372,20 @@ export default function WhatsAppFlowDemo({
 
   const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
-  const hasPlayedRef = useRef(false);
+  const hasStartedLoopRef = useRef(false);
   const messagesViewportRef = useRef<HTMLDivElement | null>(null);
   const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
 
   useEffect(() => {
     if (!hasTriggered) return;
-    if (hasPlayedRef.current) return;
+    if (hasStartedLoopRef.current) return;
     if (!safeFlowSteps.length) return;
-    hasPlayedRef.current = true;
-    setRenderedItems([]);
-    setTypingSender(null);
+    hasStartedLoopRef.current = true;
 
     let isCancelled = false;
     const timers: number[] = [];
+    const loopPauseMs = 10_000;
 
     const wait = (ms: number) =>
       new Promise<void>((resolve) => {
@@ -394,7 +393,10 @@ export default function WhatsAppFlowDemo({
         timers.push(timer);
       });
 
-    const runSequence = async () => {
+    const runSequenceOnce = async () => {
+      setRenderedItems([]);
+      setTypingSender(null);
+
       for (let index = 0; index < safeFlowSteps.length; index += 1) {
         const current = safeFlowSteps[index];
         if (!current || isCancelled) return;
@@ -462,11 +464,21 @@ export default function WhatsAppFlowDemo({
       }
     };
 
-    runSequence();
+    const runLoop = async () => {
+      while (!isCancelled) {
+        await runSequenceOnce();
+        if (isCancelled) return;
+        // Demo mode: pause 10 seconds after the final message before replaying.
+        await wait(loopPauseMs);
+      }
+    };
+
+    runLoop();
 
     return () => {
       isCancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
+      hasStartedLoopRef.current = false;
     };
   }, [hasTriggered, safeFlowSteps]);
 
