@@ -40,7 +40,7 @@ type QuickReplyStep = {
   selectedReplyTimestamp: string;
 };
 
-export type ChatFlowStep = ChatTextStep | QuickReplyStep;
+type ChatFlowStep = ChatTextStep | QuickReplyStep;
 type RenderedTextItem = {
   kind: 'text';
   id: string;
@@ -151,10 +151,6 @@ type WhatsAppFlowDemoProps = {
    * Edit this array to customize the chatbot conversation flow.
    */
   flowSteps?: ChatFlowStep[];
-  /**
-   * Optional key to force a flow restart when external scenario changes.
-   */
-  resetKey?: string;
   className?: string;
 };
 
@@ -368,7 +364,6 @@ export default function WhatsAppFlowDemo({
     'Follow up automatically if there is no response',
   ],
   flowSteps = DEFAULT_FLOW_STEPS,
-  resetKey,
   className = '',
 }: WhatsAppFlowDemoProps) {
   const { ref, hasTriggered } = useInViewOnce<HTMLDivElement>({
@@ -377,19 +372,10 @@ export default function WhatsAppFlowDemo({
 
   const [renderedItems, setRenderedItems] = useState<RenderedChatItem[]>([]);
   const [typingSender, setTypingSender] = useState<MessageSender | null>(null);
-  const [flowVersion, setFlowVersion] = useState(0);
   const hasStartedLoopRef = useRef(false);
   const messagesViewportRef = useRef<HTMLDivElement | null>(null);
   const safeFlowSteps = useMemo(() => flowSteps ?? DEFAULT_FLOW_STEPS, [flowSteps]);
   const businessInitials = useMemo(() => getInitials(businessName), [businessName]);
-
-  useEffect(() => {
-    // Restart demo loop when scenario/flow data changes.
-    hasStartedLoopRef.current = false;
-    setRenderedItems([]);
-    setTypingSender(null);
-    setFlowVersion((prev) => prev + 1);
-  }, [safeFlowSteps, businessName, resetKey]);
 
   useEffect(() => {
     if (!hasTriggered) return;
@@ -494,7 +480,7 @@ export default function WhatsAppFlowDemo({
       timers.forEach((timer) => window.clearTimeout(timer));
       hasStartedLoopRef.current = false;
     };
-  }, [hasTriggered, flowVersion, safeFlowSteps]);
+  }, [hasTriggered, safeFlowSteps]);
 
   useEffect(() => {
     const node = messagesViewportRef.current;
